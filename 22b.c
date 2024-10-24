@@ -1,27 +1,28 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*
+============================================================================
+Name : 22b.c
+Author : Girish Kumar Sahu
+Description :Write a program to wait for data to be written into FIFO within 10 seconds, use select
+system call with FIFO.
+Date: 21st Sep, 2024.
+============================================================================
+*/
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <string.h>
+#include <stdio.h>
 
-int main() {
-    const char *fifo1 = "/tmp/myfifo1";
-    const char *fifo2 = "/tmp/myfifo2";
-    char write_msg[100];
-    char read_msg[100];
-
-    int fd1 = open(fifo1, O_RDONLY);
-    read(fd1, read_msg, sizeof(read_msg));
-    printf("FIFO Reader received: %s\n", read_msg);
-    close(fd1);
-
-    printf("FIFO Reader: Enter message to send back: ");
-    fgets(write_msg, sizeof(write_msg), stdin);
-    
-    int fd2 = open(fifo2, O_WRONLY);
-    write(fd2, write_msg, strlen(write_msg) + 1);
-    close(fd2);
-
-    return 0;
+void main()
+{
+int f;
+char *s = "./22-fifo";
+mkfifo(s, S_IRWXU);
+f = open(s, O_NONBLOCK | O_WRONLY);
+char *st;
+long int size=100;
+printf("enter message\n");
+int l=getline(&st,&size,stdin);
+write(f, st, l);
+close(f);
 }
-

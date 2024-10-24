@@ -1,35 +1,30 @@
 /*
 ============================================================================
 Name : 32d.c
-Author : GIRISH KUMAR SAHU
-Description : Remove created semaphore
-Date: 20th Sep, 2024.
-=============================================================================
+Author : Girish Kumar Sahu
+Description :Write a program to implement semaphore to protect any critical section.
+a. rewrite the ticket number creation program using semaphore
+b. protect shared memory from concurrent write access
+c. protect multiple pseudo resources ( may be two) using counting semaphore
+d. remove the created semaphore
+Date: 19th Sep, 2024.
+============================================================================
 */
+#include<stdio.h>
+#include<sys/sem.h>
+#include<unistd.h>
+union semun {
+int val;
+struct semid_ds *buff;
+unsigned short int *array;
+};
 
-#include <stdio.h>
-#include <sys/sem.h>
-#include <sys/ipc.h>
-
-int main() {
-    key_t key = ftok("semfile", 65);
-    int semid = semget(key, 1, 0666 | IPC_CREAT);
-    if (semid == -1) {
-        perror("Failed to create semaphore");
-        return 1;
-    }
-
-    if (semctl(semid, 0, IPC_RMID) == -1) {
-        perror("Failed to remove semaphore");
-        return 1;
-    }
-
-    printf("Semaphore removed successfully\n");
-    return 0;
+int main(void)
+{union semun arg;
+int key , semid;
+key = ftok(".",'a');
+semid=semget(key,1,0);
+semctl(semid, 0, IPC_RMID);
+printf("deleted ");
 }
-
-/*
-Output:
-Semaphore removed successfully
-*/
 

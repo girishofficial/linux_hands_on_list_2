@@ -1,49 +1,58 @@
 /*
 ============================================================================
 Name : 32a.c
-Author : GIRISH KUMAR SAHU
-Description : Ticket number creation using semaphore to protect critical section
-Date: 20th Sep, 2024.
-=============================================================================
+Author : Girish Kumar Sahu
+Description :Write a program to implement semaphore to protect any critical section.
+a. rewrite the ticket number creation program using semaphore
+b. protect shared memory from concurrent write access
+c. protect multiple pseudo resources ( may be two) using counting semaphore
+d. remove the created semaphore
+Date: 19th Sep, 2024.
+============================================================================
 */
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/sem.h>
+#include<sys/types.h>
+#include<sys/ipc.h>
+#include<fcntl.h>
 
-#include <stdio.h>
-#include <semaphore.h>
-#include <pthread.h>
-#include <unistd.h>
+int main(void)
+{struct {int ticket_no;}db;
 
-int ticket_no = 1;
-sem_t sem;
+int fd, key,semid;
+key=ftok(".",'a');
+semid=(key,1,0);
+struct sembuf buf={0,-1,0};
+semid=semget(key,1,0);
 
-void* create_ticket(void* arg) {
-    sem_wait(&sem);
-    printf("Ticket Number: %d\n", ticket_no++);
-    sem_post(&sem);
-    return NULL;
+fd=open("db",O_RDWR);
+read(fd,&db,sizeof(db));
+printf("before eterning cs\n");
+semop(semid,&buf, 1);
+printf("inside cs\n");
+printf("current tickect no. - %d\n",db.ticket_no);
+db.ticket_no ++;
+lseek(fd,0L,SEEK_SET);
+write(fd,&db,sizeof(db));
+printf("ticket no. after updation - %d\n",db.ticket_no);
+printf("press enter to exit cs\n");
+getchar();
+buf.sem_op=1;
+semop(semid,&buf,1);
+printf("exited cs\n");
 }
 
-int main() {
-    pthread_t tid[5];
-    sem_init(&sem, 0, 1);
+/*output
+before eterning cs
+inside cs
+current tickect no. - 20
+ticket no. after updation - 21
+press enter to exit cs
 
-    for (int i = 0; i < 5; i++) {
-        pthread_create(&tid[i], NULL, create_ticket, NULL);
-    }
-
-    for (int i = 0; i < 5; i++) {
-        pthread_join(tid[i], NULL);
-    }
-
-    sem_destroy(&sem);
-    return 0;
-}
-
-/*
-Output:
-Ticket Number: 1
-Ticket Number: 2
-Ticket Number: 3
-Ticket Number: 4
-Ticket Number: 5
+exited cs
+output of another termina
+before eterning cs
 */
+
 

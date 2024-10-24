@@ -1,48 +1,55 @@
 /*
 ============================================================================
 Name : 32c.c
-Author : GIRISH KUMAR SAHU
-Description : Protect multiple pseudo resources using counting semaphore
-Date: 20th Sep, 2024.
-=============================================================================
+Author : Girish Kumar Sahu
+Description :Write a program to implement semaphore to protect any critical section.
+a. rewrite the ticket number creation program using semaphore
+b. protect shared memory from concurrent write access
+c. protect multiple pseudo resources ( may be two) using counting semaphore
+d. remove the created semaphore
+Date: 19th Sep, 2024.
+============================================================================
 */
-
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/types.h>
 #include <stdio.h>
-#include <semaphore.h>
-#include <pthread.h>
+#include <sys/shm.h>
 #include <unistd.h>
+int main(void){
+int shmkey,shmid,semkey,semid;
+char *data;
+shmkey = ftok(".",'g');
+shmid=shmget(shmkey,1024,IPC_CREAT|0744);
+data =shmat(shmid,0,0);
+semkey=ftok(".",'f');
+semid=(semkey,1,0);
+struct sembuf buf={0,-1,0};
+semid=semget(semkey,1,0);
+semop(semid,&buf, 1);
+printf("critical section\n");
+printf("enter text:");
+scanf("%[^\n]",data);
+printf("data from shared memory : %s\n", data);
 
-int resource1 = 5, resource2 = 3;
-sem_t sem_resources;
-
-void* access_resource(void* arg) {
-    sem_wait(&sem_resources);
-    printf("Accessing resource: Resource1 = %d, Resource2 = %d\n", resource1--, resource2--);
-    sem_post(&sem_resources);
-    return NULL;
+printf("press enter to exit cs\n");
+getchar();
+buf.sem_op=1;
+semop(semid,&buf,1);
+printf("exited cs\n");
 }
 
-int main() {
-    pthread_t tid[4];
-    sem_init(&sem_resources, 0, 2);  // Allowing 2 threads to access resources simultaneously
 
-    for (int i = 0; i < 4; i++) {
-        pthread_create(&tid[i], NULL, access_resource, NULL);
-    }
+/*output
+critical section
+enter text:bye
+data from shared memory : bye
+press enter to exit cs
+exited cs 
 
-    for (int i = 0; i < 4; i++) {
-        pthread_join(tid[i], NULL);
-    }
-
-    sem_destroy(&sem_resources);
-    return 0;
-}
-
-/*
-Output:
-Accessing resource: Resource1 = 5, Resource2 = 3
-Accessing resource: Resource1 = 4, Resource2 = 2
-Accessing resource: Resource1 = 3, Resource2 = 1
-Accessing resource: Resource1 = 2, Resource2 = 0
+critical section
+enter text:hi
+data from shared memory : hi
+press enter to exit cs
+exited cs
 */
-

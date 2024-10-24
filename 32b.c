@@ -1,50 +1,50 @@
 /*
 ============================================================================
 Name : 32b.c
-Author : GIRISH KUMAR SAHU
-Description : Protect shared memory using semaphore to prevent concurrent write
-Date: 20th Sep, 2024.
-=============================================================================
+Author : Girish Kumar Sahu
+Description :Write a program to implement semaphore to protect any critical section.
+a. rewrite the ticket number creation program using semaphore
+b. protect shared memory from concurrent write access
+c. protect multiple pseudo resources ( may be two) using counting semaphore
+d. remove the created semaphore
+Date: 19th Sep, 2024.
+============================================================================
 */
-
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/types.h>
 #include <stdio.h>
-#include <semaphore.h>
-#include <pthread.h>
+#include <sys/shm.h>
 #include <unistd.h>
+int main(void){
+int shmkey,shmid,semkey,semid;
+char *data;
+shmkey = ftok(".",'d');
+shmid=shmget(shmkey,1024,IPC_CREAT|0744);
+data =shmat(shmid,0,0);
+semkey=ftok(".",'e');
+semid=(semkey,1,0);
+struct sembuf buf={0,-1,0};
+semid=semget(semkey,1,0);
+semop(semid,&buf, 1);
+printf("critical section\n");
+printf("enter text:");
+scanf("%[^\n]",data);
+printf("data from shared memory : %s\n", data);
 
-int shared_mem = 0;
-sem_t sem;
-
-void* write_shared_mem(void* arg) {
-    sem_wait(&sem);
-    shared_mem++;
-    printf("Shared Memory updated to: %d\n", shared_mem);
-    sem_post(&sem);
-    return NULL;
+printf("press enter to exit cs\n");
+getchar();
+buf.sem_op=1;
+semop(semid,&buf,1);
+printf("exited cs\n");
 }
 
-int main() {
-    pthread_t tid[5];
-    sem_init(&sem, 0, 1);
 
-    for (int i = 0; i < 5; i++) {
-        pthread_create(&tid[i], NULL, write_shared_mem, NULL);
-    }
-
-    for (int i = 0; i < 5; i++) {
-        pthread_join(tid[i], NULL);
-    }
-
-    sem_destroy(&sem);
-    return 0;
-}
 
 /*
-Output:
-Shared Memory updated to: 1
-Shared Memory updated to: 2
-Shared Memory updated to: 3
-Shared Memory updated to: 4
-Shared Memory updated to: 5
+critical section
+enter text:hello
+data from shared memory : hello
+press enter to exit cs
+exited cs
 */
-
