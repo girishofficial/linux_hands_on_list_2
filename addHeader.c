@@ -1,38 +1,20 @@
-/*
-============================================================================
-Name : addHeader.c
-Author : GIRISH KUMAR SAHU
-Description : Description of addHeader.c
-Date: 20th Sep, 2024.
-=============================================================================
-*/
 #include <stdio.h>
 #include <stdlib.h>
 
-#define HEADER "/*
-\
-============================================================================
-\
-Name : 9.c
-\
-Author : Girish Kumar Sahu
-\
-Description : Write a program to ignore a SIGINT signal then reset the default action of the SIGINT
-\
-signal - Use signal system call.
-\
-Date: 19th Sep, 2024.
-\
-============================================================================
-\
-*/
-"
+#define HEADER "/*\n\
+============================================================================\n\
+Name : 9.c\n\
+Author : Girish Kumar Sahu\n\
+Description : Write a program to ignore a SIGINT signal then reset the default action of the SIGINT\n\
+signal - Use signal system call.\n\
+Date: 19th Sep, 2024.\n\
+============================================================================\n\
+*/\n"
 
 void add_header(const char *filename) {
     FILE *file = fopen(filename, "r+");
     if (file == NULL) {
-        fprintf(stderr, "Could not open file: %s
-", filename);
+        fprintf(stderr, "Could not open file: %s\n", filename);
         exit(EXIT_FAILURE);
     }
 
@@ -57,14 +39,13 @@ void add_header(const char *filename) {
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <filename>
-", argv[0]);
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
         return EXIT_FAILURE;
     }
 
     add_header(argv[1]);
 
-    printf("Header added to %s
-", argv[1]);
+    printf("Header added to %s\n", argv[1]);
     return EXIT_SUCCESS;
 }
+

@@ -2,9 +2,8 @@
 ============================================================================
 Name : 4.c
 Author : Girish Kumar Sahu
-Description : Write a program to measure how much time is taken to execute 100 getppid ( )
-system call. Use time stamp counter. 
-Date: 19th Sep, 2024.
+Description : 
+Date: 17th Sep, 2024.
 =============================================================================
 */
 

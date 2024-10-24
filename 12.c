@@ -1,9 +1,10 @@
 /*
 ============================================================================
-Name : 12.c
+Name : 9.c
 Author : Girish Kumar Sahu
-Description : Description of 12.c
-Date: 20th Sep, 2024.
+Description : Write a program to ignore a SIGINT signal then reset the default action of the SIGINT
+signal - Use signal system call.
+Date: 19th Sep, 2024.
 ============================================================================
 */
 #include<stdio.h>
@@ -15,18 +16,14 @@ int main(){
     pid_t pid = fork();
 
     if(pid == 0) {
-        printf("ChildPID = %d, ParentPID = %d
-", getpid(), getppid());
+        printf("ChildPID = %d, ParentPID = %d\n", getpid(), getppid());
         sleep(2);
-        printf("Sending SIGKILL to parent (PID: %d)
-", getppid());
+        printf("Sending SIGKILL to parent (PID: %d)\n", getppid());
         kill(getppid(), SIGKILL);
         sleep(2);
-        printf("Child parent id should be one PID : %d
-", getppid());
+        printf("Child parent id should be one PID : %d\n", getppid());
     } else {
-        printf("Parent PID: %d, child PID is %d
-", getpid(), pid);
+        printf("Parent PID: %d, child PID is %d\n", getpid(), pid);
         sleep(5);
     }
 
@@ -40,3 +37,4 @@ Sending SIGKILL to parent (PID: 13282)
 Killed
 Child parent id should be one PID : 2278
 */
+

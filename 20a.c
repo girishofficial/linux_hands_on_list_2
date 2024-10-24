@@ -1,11 +1,3 @@
-/*
-============================================================================
-Name : 20a.c
-Author : GIRISH KUMAR SAHU
-Description : Write two programs so that both can communicate by FIFO -Use one way communication.
-Date: 20th Sep, 2024.
-=============================================================================
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -24,3 +16,4 @@ int main() {
 
     return 0;
 }
+

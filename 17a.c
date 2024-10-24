@@ -1,12 +1,14 @@
 /*
 ============================================================================
 Name : 17a.c
-Author : GIRISH KUMAR SAHU
-Description : Execute ls -l | wc using dup.
-Date: 20th Sep, 2024.
-=============================================================================
+Author : Girish Kumar Sahu
+Description :Write a program to execute ls -l | wc.
+a. use dup
+b. use dup2
+c. use fcntl 
+Date: 21st Sep, 2024.
+============================================================================
 */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,26 +16,28 @@ Date: 20th Sep, 2024.
 #include <sys/wait.h>
 
 int main() {
-    int pipefd[2];
+    int pipefd[2]; 
+    pid_t pid1, pid2;
     pipe(pipefd);
-    
-    if (fork() == 0) {
+    pid1 = fork();
+    if (pid1 == 0) {
+        close(STDOUT_FILENO);
         dup(pipefd[1]);
         close(pipefd[0]);
         close(pipefd[1]);
         execlp("ls", "ls", "-l", NULL);
-    } else {
-        wait(NULL);
-        dup(pipefd[0]);
-        close(pipefd[0]);
-        close(pipefd[1]);
-        execlp("wc", "wc", NULL);
-    }
-    return 0;
 }
-
-/*
-Output:
-<output of ls -l followed by line count>
-*/
-
+pid2 = fork();
+if (pid2 == 0) {
+    close(STDIN_FILENO);
+    dup(pipefd[0]);
+    close(pipefd[0]);
+    close(pipefd[1]);
+    execlp("wc", "wc", NULL);
+}
+close(pipefd[0]);
+close(pipefd[1]);
+waitpid(pid1, NULL, 0);
+waitpid(pid2, NULL, 0);
+return 0;
+}

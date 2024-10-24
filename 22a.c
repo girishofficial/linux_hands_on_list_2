@@ -1,42 +1,41 @@
 /*
 ============================================================================
 Name : 22a.c
-Author : GIRISH KUMAR SAHU
-Description : Write a program to wait for data to be written into FIFO within 10 seconds, use select
+Author : Girish Kumar Sahu
+Description :Write a program to wait for data to be written into FIFO within 10 seconds, use select
 system call with FIFO.
-Date: 20th Sep, 2024.
-=============================================================================
+Date: 21st Sep, 2024.
+============================================================================
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>  
+#include <fcntl.h>     
+#include <sys/time.h>  
+#include <unistd.h>    
+#include <stdio.h>     
 
-int main() {
-    const char *fifo1 = "/tmp/myfifo1";
-    const char *fifo2 = "/tmp/myfifo2";
-    char write_msg[100];
-    char read_msg[100];
-
-    mkfifo(fifo1, 0666);
-    mkfifo(fifo2, 0666);
-
-    printf("FIFO Writer: Enter message to send: ");
-    fgets(write_msg, sizeof(write_msg), stdin);
-    
-    int fd1 = open(fifo1, O_WRONLY);
-    write(fd1, write_msg, strlen(write_msg) + 1);
-    close(fd1);
-
-    int fd2 = open(fifo2, O_RDONLY);
-    read(fd2, read_msg, sizeof(read_msg));
-    printf("FIFO Writer received: %s
-", read_msg);
-    close(fd2);
-
-    unlink(fifo1);
-    unlink(fifo2);
-    
-    return 0;
+void main()
+{
+struct timeval t;
+fd_set fd;
+char *path = "./22-fifo";
+mkfifo(path, S_IRWXU);
+int f = open(path, O_NONBLOCK | O_RDONLY);
+FD_ZERO(&fd);
+FD_SET(f, &fd);
+t.tv_sec = 10;
+t.tv_usec = 0;
+int o = select(f + 1, &fd, NULL, NULL, &t);
+if (o == 0)
+{
+printf("Time out");
+}
+else
+{
+char buf;
+while (read(f, &buf, 1) > 0)
+write(1, &buf, 1);
+write(1, "\n", 1);
+}
+close(f);
 }

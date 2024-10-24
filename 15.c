@@ -1,12 +1,3 @@
-/*
-============================================================================
-Name : 15.c
-Author : GIRISH KUMAR SAHU
-Description : Write a simple program to create a pipe, write to the pipe, read from pipe and display on
-the monitor.
-Date: 20th Sep, 2024.
-=============================================================================
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,10 +27,10 @@ int main() {
     } else {
         close(fd[1]);
         read(fd[0], read_m, sizeof(read_m));
-        printf("Child process received: %s
-", read_m);
+        printf("Child process received: %s\n", read_m);
         close(fd[0]);
     }
 
     return 0;
 }
+

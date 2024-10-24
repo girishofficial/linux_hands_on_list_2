@@ -1,12 +1,3 @@
-/*
-============================================================================
-Name : 22b.c
-Author : GIRISH KUMAR SAHU
-Description : Write a program to wait for data to be written into FIFO within 10 seconds, use select
-system call with FIFO.
-Date: 20th Sep, 2024.
-=============================================================================
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -21,8 +12,7 @@ int main() {
 
     int fd1 = open(fifo1, O_RDONLY);
     read(fd1, read_msg, sizeof(read_msg));
-    printf("FIFO Reader received: %s
-", read_msg);
+    printf("FIFO Reader received: %s\n", read_msg);
     close(fd1);
 
     printf("FIFO Reader: Enter message to send back: ");
@@ -34,3 +24,4 @@ int main() {
 
     return 0;
 }
+

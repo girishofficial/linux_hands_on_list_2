@@ -1,13 +1,5 @@
 /*
 ============================================================================
-Name : 31b.c
-Author : GIRISH KUMAR SAHU
-Description : Description of 31b.c
-Date: 20th Sep, 2024.
-=============================================================================
-*/
-/*
-============================================================================
 Name : 31a.c
 Author : Girish Kumar Sahu
 Description : Create a binary semaphore and initialize its value.
@@ -36,8 +28,7 @@ int main() {
         exit(1);
     }
 
-    printf("Binary semaphore created and initialized to 1
-");
+    printf("Binary semaphore created and initialized to 1\n");
 
     return 0;
 }
@@ -46,3 +37,4 @@ int main() {
 Output:
 Binary semaphore created and initialized to 1
 */
+

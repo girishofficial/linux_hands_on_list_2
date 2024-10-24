@@ -1,11 +1,3 @@
-/*
-============================================================================
-Name : 21a.c
-Author : GIRISH KUMAR SAHU
-Description : Write two programs so that both can communicate by FIFO -Use two way communications.
-Date: 20th Sep, 2024.
-=============================================================================
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -30,8 +22,7 @@ int main() {
 
     int fd2 = open(fifo2, O_RDONLY);
     read(fd2, read_msg, sizeof(read_msg));
-    printf("FIFO Writer received: %s
-", read_msg);
+    printf("FIFO Writer received: %s\n", read_msg);
     close(fd2);
 
     unlink(fifo1);
@@ -39,3 +30,4 @@ int main() {
     
     return 0;
 }
+

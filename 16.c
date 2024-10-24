@@ -1,12 +1,3 @@
-/*
-============================================================================
-Name : 16.c
-Author : GIRISH KUMAR SAHU
-Description : Write a program to send and receive data from parent to child vice versa. Use two way
-communication.
-Date: 20th Sep, 2024.
-=============================================================================
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -30,16 +21,14 @@ int main() {
         close(p2[1]);
         write(p1[1], msg_from_parent, strlen(msg_from_parent) + 1);
         read(p2[0], buffer, sizeof(buffer));
-        printf("Parent received: %s
-", buffer);
+        printf("Parent received: %s\n", buffer);
         close(p1[1]);
         close(p2[0]);
     } else {
         close(p1[1]);
         close(p2[0]);
         read(p1[0], buffer, sizeof(buffer));
-        printf("Child received: %s
-", buffer);
+        printf("Child received: %s\n", buffer);
         write(p2[1], msg_from_child, strlen(msg_from_child) + 1);
         close(p1[0]);
         close(p2[1]);
@@ -47,3 +36,4 @@ int main() {
 
     return 0;
 }
+
